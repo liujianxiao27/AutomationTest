@@ -1,0 +1,177 @@
+req:
+  -
+    caseID: 1
+    caseName: "短租下单"
+    before:
+      sql:
+        [
+          "delete from atzuchedb.trans_filter where car_no = 904044522",
+          "delete from atzuchedb.car_filter where car_no = 904044522"
+        ]
+      redis: [
+               "carservice:cartime:holidaytime:carno904044522",
+               "carservice:cartime:norentcar:carno904044522",
+               "carservice:cartime:filtercar:carno904044522",
+               "carservice:cartime:notakecar:carno904044522"
+      ]
+    interfaceGroup: "order"
+    interfacekey: "req"
+    json: {
+    "orderCategory": "1",
+    "businessParentType": "5",
+    "businessChildType": "2",
+    "platformParentType": "1",
+    "platformChildType": "1",
+    "cityCode": "310100",
+    "cityName": "上海",
+    "sceneCode": "EX001",
+    "source": "1",
+    "rentTime": "2021-04-23 09:00:00",
+    "revertTime": "2021-04-25 09:00:00",
+    "srvGetFlag": "1",
+    "srvGetAddr": "黄浦路60号海鸥饭店2层",
+    "srvGetLon": "121.49162",
+    "srvGetLat": "31.243801",
+    "srvReturnFlag": "1",
+    "srvReturnAddr": "黄浦路60号海鸥饭店2层",
+    "srvReturnLon": "121.49162",
+    "srvReturnLat": "31.243801",
+    "carNo": "904044522",
+    "abatement": "1",
+    "getCarFreeCouponId": "",
+    "disCouponIds": "",
+    "carOwnerCouponNo": "",
+    "useAutoCoin": "1",
+    "useBal": "0",
+    "freeDoubleTypeId": "2",
+    "useAirportService": "0",
+    "flightNo": "发23",
+    "limitRedStatus": "",
+    "limitReductionId": "",
+    "driverIds": "2",
+    "carAddrIndex": "0",
+    "isLeaveCity": "1",
+    "rentCity": "海南",
+    "queryId": "",
+    "activityId": "",
+    "rentReason": "",
+    "oilType": "2",
+    "conPhone": "15921237683",
+    "memNo": "175452405",
+    "tyreInsurFlag": "1",
+    "driverInsurFlag": "1",
+    "distributionMode": "1",
+    "useSpecialPrice": "1"
+  }
+    expectResult:
+      assertJson:
+        resCode: "000000"
+        data.status: "4"
+      assertSql:
+        -
+          sql: "select * from order_center.`order` where order_no = {orderNo}"
+          result: {
+            category: "1",
+            mem_no_renter: "175452405"
+          }
+    setGlobal:
+      isSet: 1
+      setKey:
+        orderNo: "data.orderNo"
+    after:
+
+  - caseID: 2
+    caseName: "车辆库存拦截"
+    before:
+    interfaceGroup: "order"
+    interfacekey: "req"
+    json: {
+      "orderCategory": "1",
+      "businessParentType": "5",
+      "businessChildType": "2",
+      "platformParentType": "1",
+      "platformChildType": "1",
+      "cityCode": "310100",
+      "cityName": "上海",
+      "sceneCode": "EX001",
+      "source": "1",
+      "rentTime": "2021-04-23 09:00:00",
+      "revertTime": "2021-04-25 09:00:00",
+      "srvGetFlag": "1",
+      "srvGetAddr": "黄浦路60号海鸥饭店2层",
+      "srvGetLon": "121.49162",
+      "srvGetLat": "31.243801",
+      "srvReturnFlag": "1",
+      "srvReturnAddr": "黄浦路60号海鸥饭店2层",
+      "srvReturnLon": "121.49162",
+      "srvReturnLat": "31.243801",
+      "carNo": "904044522",
+      "abatement": "1",
+      "getCarFreeCouponId": "",
+      "disCouponIds": "",
+      "carOwnerCouponNo": "",
+      "useAutoCoin": "1",
+      "useBal": "0",
+      "freeDoubleTypeId": "2",
+      "useAirportService": "0",
+      "flightNo": "发23",
+      "limitRedStatus": "",
+      "limitReductionId": "",
+      "driverIds": "2",
+      "carAddrIndex": "0",
+      "isLeaveCity": "1",
+      "rentCity": "海南",
+      "queryId": "",
+      "activityId": "",
+      "rentReason": "",
+      "oilType": "2",
+      "conPhone": "15921237683",
+      "memNo": "175452405",
+      "tyreInsurFlag": "1",
+      "driverInsurFlag": "1",
+      "distributionMode": "1",
+      "useSpecialPrice": "1"
+    }
+    expectResult:
+      assertJson:
+        resCode: "111055"
+        resMsg: "车辆校验不可租时间不可租"
+      assertSql:
+        - sql:
+          result:
+    setGlobal:
+      isSet: 0
+      setKey:
+    after:
+
+cancel:
+  - caseID: 1
+    caseName: "取消订单"
+    before:
+      caseId:
+        -
+          filepath: "../file/case/order.yml"
+          key:  "req"
+          caseID: 1
+    interfaceGroup: "order"
+    interfacekey: "cancel"
+    json: {
+      "orderNo": "{orderNo}",
+      "cancelType": "0",
+      "operator": "test"
+    }
+    expectResult:
+      assertJson:
+        resCode: "000000"
+        resMsg: "success"
+      assertSql:
+        - sql: "select * from order_center.`order` where order_no = {orderNo}"
+          result: {
+            category: "1",
+            mem_no_renter: "175452405"
+          }
+    setGlobal:
+      isSet: 0
+      setKey:
+    after:
+

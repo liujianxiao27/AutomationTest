@@ -1,0 +1,21 @@
+defaultEnvironment:
+  environment: "test5"
+
+test2:
+  orderCore: "http://10.0.3.235:1412"
+
+
+
+test5:
+  orderCore: "http://114.55.235.185:1412"
+  sql:
+    host: "rm-bp17en498o13rb4c6jo.mysql.rds.aliyuncs.com"
+    port: 3306
+    user: "auto_dev"
+    password: "auto%2015"
+    charset: "utf8"
+  redis:
+    host: "121.199.4.107"
+    port: 6379
+    db: 0
+

@@ -1,0 +1,11 @@
+req:
+  host: orderCore
+  method: post
+  url: /order/normal/req
+  header: {"Content-Type":"application/json"}
+
+cancel:
+  host: orderCore
+  method: post
+  url: /order/admin/platform/cancel
+  header: { "Content-Type": "application/json" }
