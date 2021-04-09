@@ -5,14 +5,17 @@
 # @Version：V 0.1
 # @File : requestInterface.py
 # @desc : 请求接口
+import os
+
 from requestsTest.requestsFramework.Base import Base
 from util import yamlUtil
 
 
 class RequestInterface(Base):
+    basedir = os.path.dirname(os.path.abspath(os.path.dirname(__file__)))
     def __init__(self):
-        self.enviromentInformation = yamlUtil.readYaml("../file/interface/enviroment.yml")
-        self.group = yamlUtil.readYaml("../file/interface/group.yml")
+        self.enviromentInformation = yamlUtil.readYaml( f"{self.basedir}/file/interface/enviroment.yml")
+        self.group = yamlUtil.readYaml(f"{self.basedir}/file/interface/group.yml")
         super().__init__()
 
     # 发送请求
@@ -21,7 +24,7 @@ class RequestInterface(Base):
         interfaceFilepath = self.getInterfaceFilepath(interfaceGroupName)
         if interfaceFilepath:
             # 获取接口信息
-            interfaceInformation=yamlUtil.readYamlByKey(interfaceFilepath, key)
+            interfaceInformation=yamlUtil.readYamlByKey(self.basedir + interfaceFilepath, key)
             if interfaceInformation:
                 url = interfaceInformation.get("url")
                 host=interfaceInformation.get("host")
@@ -55,6 +58,7 @@ class RequestInterface(Base):
             realurl=realHost + url
             # 组装url结束，返回数据
             return realurl
+
 
 
 

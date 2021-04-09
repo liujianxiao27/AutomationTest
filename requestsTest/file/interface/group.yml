@@ -1,2 +1,2 @@
 interface:
-  order: "../file/interface/interfaceYml/order.yml"
+  order: "/file/interface/interfaceYml/order.yml"

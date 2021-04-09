@@ -144,13 +144,16 @@ req:
       setKey:
     after:
 
+
+
+
 cancel:
   - caseID: 1
     caseName: "取消订单"
     before:
       caseId:
         -
-          filepath: "../file/case/order.yml"
+          filepath: "/file/case/order.yml"
           key:  "req"
           caseID: 1
     interfaceGroup: "order"
@@ -174,4 +177,8 @@ cancel:
       isSet: 0
       setKey:
     after:
+
+
+
+
 

@@ -6,6 +6,7 @@
 # @File : test_Base.py
 # @desc :
 import json
+import os
 import re
 
 import pytest
@@ -21,7 +22,7 @@ class TestBase():
     requests = RequestInterface()   # 接口请求
     sqlConn = MySqlConn() # mysql操作
     redisConn = RedisConn() # redis操作
-
+    basedir = os.path.dirname(os.path.abspath(os.path.dirname(__file__))) #当前文件路径
     globalParameters = dict() # 全局变量
 
 
@@ -143,7 +144,7 @@ class TestBase():
 
     # 调用测试用例 处理前置用例或后置用例
     def callCase(self,filepath,key,caseId):
-        caseInformation = yamlUtil.readYaml(filepath)
+        caseInformation = yamlUtil.readYaml(self.basedir + filepath)
         Casees = caseInformation.get(key)
         for case in Casees:
             if case.get("caseID") == caseId:

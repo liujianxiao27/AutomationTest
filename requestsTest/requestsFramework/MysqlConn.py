@@ -5,6 +5,8 @@
 # @Version：V 0.1
 # @File : MysqlConn.py
 # @desc : 连接mysql
+import os
+
 import pymysql
 
 from util import yamlUtil
@@ -18,7 +20,8 @@ class MySqlConn():
 
     # 连接数据库
     def conn(self):
-        getEnviroment = yamlUtil.readYaml("../file/interface/enviroment.yml")
+        basedir = os.path.dirname(os.path.abspath(os.path.dirname(__file__)))
+        getEnviroment = yamlUtil.readYaml(f"{basedir}/file/interface/enviroment.yml")
         enviromrnt = getEnviroment.get("defaultEnvironment").get("environment")
         mysqlInformation = getEnviroment.get(enviromrnt).get("sql")
         if mysqlInformation :

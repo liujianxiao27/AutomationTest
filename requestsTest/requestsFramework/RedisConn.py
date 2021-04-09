@@ -5,6 +5,8 @@
 # @Version：V 0.1
 # @File : RedisConn.py
 # @desc : redis操作
+import os
+
 import redis
 
 from util import yamlUtil
@@ -15,7 +17,8 @@ class RedisConn():
         self.reidsConn = self.conn() # 连接redis
 
     def conn(self):
-        getEnviroment=yamlUtil.readYaml("../file/interface/enviroment.yml")
+        basedir = os.path.dirname(os.path.abspath(os.path.dirname(__file__)))
+        getEnviroment=yamlUtil.readYaml(f"{basedir}/file/interface/enviroment.yml")
         enviromrnt=getEnviroment.get("defaultEnvironment").get("environment")
         redisInformation = getEnviroment.get(enviromrnt).get("redis")
         if redisInformation:
